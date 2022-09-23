@@ -971,7 +971,8 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 															$getFeesOptional = apply_filters('is_fee_optional_default', $getFeesOptional);
 														}
 													}
-													if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) ) {
+													$merge_fee_flag = apply_filters('merge_fee_flag',true, $fees_id);
+    												if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) && true == $merge_fee_flag ) {
 														if( 'yes' !== $getFeesOptional || $apply_rule_for_optional ){
 															$total_fee = $total_fee + $fees_cost;
 														}
@@ -995,7 +996,6 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 										} else {
 											/** @var add the total fee value $total_fee */
 											if ( ( ! empty( $chk_enable_custom_fun ) && 'on' === $chk_enable_custom_fun ) ) {
-												
 												if ( wcpffc_fs()->is__premium_only() ) {
 													if ( wcpffc_fs()->can_use_premium_code() ) {
 														$getFeesOptional = get_post_meta( $fees_id, 'fee_settings_select_optional', true );
@@ -1199,7 +1199,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 	 * Optional fee callback function
 	 */
 	public function add_option_to_checkout__premium_only( $payment_fragments ){
-
+		
 		global $woocommerce_wpml, $sitepress, $woocommerce;
 		$default_lang = self::$admin_object->wcpfc_pro_get_default_langugae_with_sitpress();
 		$final_output = '';
@@ -1261,7 +1261,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 
 						$getFeeoptional   					= get_post_meta( $fees_id, 'fee_settings_select_optional', true );
 						$display_optional_fee_on_checkout   = get_post_meta( $fees_id, '_wcpfc_display_optional_fee_on_checkout', true );
-
+						
 						/** Check if the fee is optional or not */
 						if( 'yes' === $getFeeoptional && 'on' === $display_optional_fee_on_checkout) {
 
@@ -1319,8 +1319,8 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 
 							$today =  strtolower( gmdate( "D" ) );
 							$ds_select_day_of_week  	= get_post_meta( $fees_id, 'ds_select_day_of_week', true ) ? get_post_meta( $fees_id, 'ds_select_day_of_week', true ) : array();
-
-							if ( ( $currentDate >= $feeStartDate || '' === $feeStartDate ) && ( $currentDate <= $feeEndDate || '' === $feeEndDate ) && ( ! empty( $chk_enable_custom_fun ) && 'on' !== $chk_enable_custom_fun ) && ( $local_nowtimestamp >= $feeStartTime || '' === $feeStartTime ) && ( $local_nowtimestamp <= $feeEndTime || '' === $feeEndTime ) && ( in_array($today, $ds_select_day_of_week, true) || empty($ds_select_day_of_week) ) ) {
+							
+							if ( ( $currentDate >= $feeStartDate || '' === $feeStartDate ) && ( $currentDate <= $feeEndDate || '' === $feeEndDate ) && ( $local_nowtimestamp >= $feeStartTime || '' === $feeStartTime ) && ( $local_nowtimestamp <= $feeEndTime || '' === $feeEndTime ) && ( in_array($today, $ds_select_day_of_week, true) || empty($ds_select_day_of_week) ) ) {
 								if ( '' !== $fees_cost ) {
 									if( 0 === $fees_count){
 										echo '<h3>'.esc_html($getOtionalFeeTitle).'</h3>';
@@ -1330,7 +1330,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 									echo '<label class="checkbox"><span class="tile_fee">'.esc_html($title) .'</span></label></div>';
 									$fees_count++;
 								}
-							}	
+							}
 						}
 					}
 				}
@@ -1565,7 +1565,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Public {
 									} else {
 										$site_product_id = $product_id_lan;
 									}
-									if ( ! ( $_product->is_virtual( 'yes' ) ) && false === strpos( $_product->get_type(), 'bundle' ) ) {
+									if ( false === strpos( $_product->get_type(), 'bundle' ) ) {
 										if ( in_array( $site_product_id, $condition['product_fees_conditions_values'] ) ) {
 											$prod_qty = $value['quantity'] ? $value['quantity'] : 0;
 											$cart_final_var_products_array[] = $prod_qty . "||" . $line_item_subtotal;

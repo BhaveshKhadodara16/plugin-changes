@@ -1218,7 +1218,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Admin {
 		if ( isset( $get_all_products->posts ) && ! empty( $get_all_products->posts ) ) {
 			foreach ( $get_all_products->posts as $get_all_product ) {
 				$_product = wc_get_product( $get_all_product->ID );
-				if ( ! ( $_product->is_virtual( 'yes' ) ) ) {
+				//if ( ! ( $_product->is_virtual( 'yes' ) ) ) {
                     if ( ! empty( $sitepress ) ) {
                         $new_product_id = apply_filters( 'wpml_object_id', $get_all_product->ID, 'product', true, $default_lang );
                     } else {
@@ -1229,7 +1229,7 @@ class Woocommerce_Conditional_Product_Fees_For_Checkout_Pro_Admin {
                     if ( '' !== $selectedVal ) {
                         $html .= '<option value="' . esc_attr( $new_product_id ) . '" ' . esc_attr( $selectedVal ) . '>' . '#' . esc_html( $new_product_id ) . ' - ' . esc_html( get_the_title( $new_product_id ) ) . '</option>';
                     }
-				}
+				//}
 			}
 		}
 		$html .= '</select>';
